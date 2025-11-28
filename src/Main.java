@@ -286,6 +286,7 @@ class StudentRepository {
 }
 
 class LoanRepository {
+    // Yardımcı Metot
     public boolean isBookBorrowed(int bookId) {
         String sql = "SELECT count(*) FROM loans WHERE bookId = ? AND dateReturned IS NULL";
         try (Connection conn = Database.connect();
