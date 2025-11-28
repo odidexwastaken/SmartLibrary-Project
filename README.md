@@ -15,8 +15,6 @@ Projenin çalışması için `sqlite-jdbc` kütüphanesinin aktif edilmesi gerek
 5.  Gelen küçük pencerede **OK** butonuna basın.
 6.  Artık `Main.java` dosyasını çalıştırabilirsiniz.
 
- **Not:** Veritabanı dosyası (`library.db`), program ilk çalıştırıldığında proje dizininde otomatik olarak oluşturulacaktır. Herhangi bir ekstra SQL kurulumuna gerek yoktur.
-
 ---
 
 ##  Proje Mimarisi ve Kod İşleyişi
