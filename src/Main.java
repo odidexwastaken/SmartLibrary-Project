@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 // ==========================================
-// 1. ENTITY SINIFLARI (Sadeleştirildi)
+// 1. ENTITY SINIFLARI (Varlıklar)
 // ==========================================
 
 class Book {
@@ -18,6 +18,11 @@ class Book {
         this.author = author;
         this.year = year;
     }
+
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+    public int getYear() { return year; }
 
     @Override
     public String toString() {
@@ -35,6 +40,10 @@ class Student {
         this.name = name;
         this.department = department;
     }
+
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getDepartment() { return department; }
 
     @Override
     public String toString() {
@@ -56,6 +65,12 @@ class Loan {
         this.dateBorrowed = dateBorrowed;
         this.dateReturned = dateReturned;
     }
+
+    public int getId() { return id; }
+    public int getBookId() { return bookId; }
+    public int getStudentId() { return studentId; }
+    public String getDateBorrowed() { return dateBorrowed; }
+    public String getDateReturned() { return dateReturned; }
 
     @Override
     public String toString() {
@@ -120,6 +135,7 @@ class Database {
 // ==========================================
 
 class BookRepository {
+    // ADD
     public void add(String title, String author, int year) {
         String sql = "INSERT INTO books(title, author, year) VALUES(?, ?, ?)";
         try (Connection conn = Database.connect();
@@ -134,6 +150,7 @@ class BookRepository {
         }
     }
 
+    // GET ALL
     public ArrayList<Book> getAll() {
         ArrayList<Book> list = new ArrayList<>();
         String sql = "SELECT * FROM books";
@@ -148,9 +165,54 @@ class BookRepository {
         }
         return list;
     }
+
+    // DELETE
+    public void delete(int id) {
+        String sql = "DELETE FROM books WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println(">> Kitap silindi.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // UPDATE
+    public void update(Book book) {
+        String sql = "UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, book.getTitle());
+            pstmt.setString(2, book.getAuthor());
+            pstmt.setInt(3, book.getYear());
+            pstmt.setInt(4, book.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // GET BY ID
+    public Book getById(int id) {
+        String sql = "SELECT * FROM books WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("year"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }
 
 class StudentRepository {
+    // ADD
     public void add(String name, String department) {
         String sql = "INSERT INTO students(name, department) VALUES(?, ?)";
         try (Connection conn = Database.connect();
@@ -164,6 +226,7 @@ class StudentRepository {
         }
     }
 
+    // GET ALL
     public ArrayList<Student> getAll() {
         ArrayList<Student> list = new ArrayList<>();
         String sql = "SELECT * FROM students";
@@ -177,6 +240,48 @@ class StudentRepository {
             System.out.println(e.getMessage());
         }
         return list;
+    }
+
+    // DELETE
+    public void delete(int id) {
+        String sql = "DELETE FROM students WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // UPDATE
+    public void update(Student student) {
+        String sql = "UPDATE students SET name = ?, department = ? WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, student.getName());
+            pstmt.setString(2, student.getDepartment());
+            pstmt.setInt(3, student.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // GET BY ID
+    public Student getById(int id) {
+        String sql = "SELECT * FROM students WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Student(rs.getInt("id"), rs.getString("name"), rs.getString("department"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }
 
@@ -194,6 +299,7 @@ class LoanRepository {
         return false;
     }
 
+    // ADD
     public void lendBook(int bookId, int studentId, String date) {
         if (isBookBorrowed(bookId)) {
             System.out.println("HATA: Bu kitap şu an başkasında!");
@@ -212,6 +318,7 @@ class LoanRepository {
         }
     }
 
+    // UPDATE
     public void returnBook(int bookId, String dateReturned) {
         String sql = "UPDATE loans SET dateReturned = ? WHERE bookId = ? AND dateReturned IS NULL";
         try (Connection conn = Database.connect();
@@ -226,6 +333,7 @@ class LoanRepository {
         }
     }
 
+    // GET ALL
     public ArrayList<Loan> getAll() {
         ArrayList<Loan> list = new ArrayList<>();
         String sql = "SELECT * FROM loans";
@@ -239,6 +347,34 @@ class LoanRepository {
             System.out.println(e.getMessage());
         }
         return list;
+    }
+
+    // DELETE
+    public void delete(int id) {
+        String sql = "DELETE FROM loans WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // GET BY ID
+    public Loan getById(int id) {
+        String sql = "SELECT * FROM loans WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Loan(rs.getInt("id"), rs.getInt("bookId"), rs.getInt("studentId"), rs.getString("dateBorrowed"), rs.getString("dateReturned"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }
 
