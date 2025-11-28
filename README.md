@@ -24,37 +24,35 @@ Projenin çalışması için `sqlite-jdbc` kütüphanesinin aktif edilmesi gerek
 
 ---
 
-##  Proje Mimarisi ve Kod İşleyişi
+## Proje Mimarisi ve Kod İşleyişi
 
-Proje, temiz kod (clean code) prensipleri gözetilerek **OOP** mantığına uygun parçalara ayrılmıştır. Kodlar tek bir dosyada toplanmak yerine, görevlerine göre sınıflara (Class) bölünmüştür.
-
-Aşağıda sınıfların görevleri özetlenmiştir:
+Proje, **OOP (Nesne Yönelimli Programlama)** prensiplerine uygun olarak katmanlı bir yapıda tasarlanmıştır.
 
 ### 1. Varlık Sınıfları (Entities)
-Bu sınıflar veritabanındaki tabloların Java tarafındaki karşılığıdır. İçlerinde herhangi bir mantıksal işlem yapılmaz, sadece veriyi taşımak (Data Transfer) için kullanılırlar.
-* **`Book` Sınıfı:** Kitapların `id`, `başlık`, `yazar` ve `basım yılı` bilgilerini tutar.
-* **`Student` Sınıfı:** Öğrencilerin `id`, `isim` ve `bölüm` bilgilerini tutar.
-* **`Loan` Sınıfı:** Ödünç alma işlemlerini tutar. Hangi kitabın, hangi öğrenci tarafından, ne zaman alındığını saklar.
+Veritabanı tablolarının Java tarafındaki karşılıklarıdır. **Immutability (Değişmezlik)** prensibi gereği değişkenler `final` olarak tanımlanmıştır.
+* **`Book`:** Kitap bilgilerini (id, başlık, yazar, yıl) tutar.
+* **`Student`:** Öğrenci bilgilerini (id, isim, bölüm) tutar.
+* **`Loan`:** Ödünç alma işlem detaylarını tutar.
 
 ### 2. Veritabanı Yönetimi (Database Class)
-* **`Database` Sınıfı:** SQLite bağlantısını kuran ana sınıftır.
-* Program her çalıştığında `library.db` dosyasının olup olmadığını kontrol eder.
-* Eğer dosya yoksa, **`createTables()`** metodu devreye girer; `books`, `students` ve `loans` tablolarını otomatik olarak oluşturur.
+* **`connect()`:** SQLite veritabanına bağlantıyı kurar. (JDBC Sürücüsü burada devreye girer).
+* **`createTables()`:** Program her açıldığında tabloları kontrol eder. Eğer yoksa `books`, `students` ve `loans` tablolarını otomatik oluşturur.
 
 ### 3. İşlem Sınıfları (Repositories)
-Veritabanı ile iletişim kuran, SQL sorgularının (`INSERT`, `SELECT`, `UPDATE`) yazıldığı katmandır. `Main` sınıfı veritabanına doğrudan erişmez, bu sınıfları aracı olarak kullanır.
+Veritabanı ile iletişim kuran (CRUD işlemlerini yapan) ana sınıflardır.
 
-* **`BookRepository`:**
-    * Kitap ekleme (`add`) ve tüm kitapları listeleme (`getAll`) işlemlerini yapar.
-* **`StudentRepository`:**
-    * Öğrenci kaydı oluşturma ve listeleme işlemlerini yapar.
-* **`LoanRepository`:**
-    * `isBookBorrowed()`: Bir kitap ödünç verilmeden önce çalışır, kitabın başkasında olup olmadığını kontrol eder.
+* **`BookRepository` & `StudentRepository`:**
+    * `add()`: Yeni kayıt ekler.
+    * `getAll()`: Tüm kayıtları listeler.
+    * `delete()`: ID'ye göre kayıt siler.
+    * `update()`: Var olan kaydı günceller.
+    * `getById()`: ID'ye göre tek bir kayıt getirir.
+
+* **`LoanRepository` (Ödünç İşlemleri):**
     * `lendBook()`: Kitabı öğrenciye ödünç verir.
-    * `returnBook()`: Kitap iade edildiğinde ilgili kaydı günceller.
+    * `returnBook()`: Kitap iade edildiğinde iade tarihini işler.
+    * `isBookBorrowed()`: Kitap başkasına verilmeden önce müsaitlik durumunu kontrol eder.
+    * *(Ayrıca standart delete, update, getById fonksiyonlarını da içerir).*
 
 ### 4. Ana Sınıf (Main)
-Uygulamanın giriş noktasıdır.
-* Kullanıcıya konsol üzerinden bir menü sunar.
-* `Scanner` ile kullanıcının seçimini alır.
-* `Switch-Case` yapısı ile kullanıcının seçimine göre ilgili Repository sınıfını çağırır.
+Uygulamanın giriş noktasıdır. Kullanıcıya konsol üzerinden bir menü sunar ve seçimlere göre ilgili Repository sınıfını çalıştırır.
