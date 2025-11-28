@@ -19,6 +19,7 @@ class Book {
         this.year = year;
     }
 
+    // update işlemleri için get ler şart
     public int getId() { return id; }
     public String getTitle() { return title; }
     public String getAuthor() { return author; }
@@ -131,7 +132,7 @@ class Database {
 }
 
 // ==========================================
-// 3. REPOSITORY SINIFLARI (İşlemler)
+// 3. REPOSITORY SINIFLARI
 // ==========================================
 
 class BookRepository {
@@ -150,35 +151,6 @@ class BookRepository {
         }
     }
 
-    // GET ALL
-    public ArrayList<Book> getAll() {
-        ArrayList<Book> list = new ArrayList<>();
-        String sql = "SELECT * FROM books";
-        try (Connection conn = Database.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                list.add(new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("year")));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return list;
-    }
-
-    // DELETE
-    public void delete(int id) {
-        String sql = "DELETE FROM books WHERE id = ?";
-        try (Connection conn = Database.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-            System.out.println(">> Kitap silindi.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     // UPDATE
     public void update(Book book) {
         String sql = "UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?";
@@ -188,6 +160,18 @@ class BookRepository {
             pstmt.setString(2, book.getAuthor());
             pstmt.setInt(3, book.getYear());
             pstmt.setInt(4, book.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // DELETE
+    public void delete(int id) {
+        String sql = "DELETE FROM books WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -209,6 +193,22 @@ class BookRepository {
         }
         return null;
     }
+
+    // GET ALL
+    public ArrayList<Book> getAll() {
+        ArrayList<Book> list = new ArrayList<>();
+        String sql = "SELECT * FROM books";
+        try (Connection conn = Database.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("year")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return list;
+    }
 }
 
 class StudentRepository {
@@ -226,34 +226,6 @@ class StudentRepository {
         }
     }
 
-    // GET ALL
-    public ArrayList<Student> getAll() {
-        ArrayList<Student> list = new ArrayList<>();
-        String sql = "SELECT * FROM students";
-        try (Connection conn = Database.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                list.add(new Student(rs.getInt("id"), rs.getString("name"), rs.getString("department")));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return list;
-    }
-
-    // DELETE
-    public void delete(int id) {
-        String sql = "DELETE FROM students WHERE id = ?";
-        try (Connection conn = Database.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     // UPDATE
     public void update(Student student) {
         String sql = "UPDATE students SET name = ?, department = ? WHERE id = ?";
@@ -262,6 +234,18 @@ class StudentRepository {
             pstmt.setString(1, student.getName());
             pstmt.setString(2, student.getDepartment());
             pstmt.setInt(3, student.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // DELETE
+    public void delete(int id) {
+        String sql = "DELETE FROM students WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -283,10 +267,26 @@ class StudentRepository {
         }
         return null;
     }
+
+    // GET ALL
+    public ArrayList<Student> getAll() {
+        ArrayList<Student> list = new ArrayList<>();
+        String sql = "SELECT * FROM students";
+        try (Connection conn = Database.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new Student(rs.getInt("id"), rs.getString("name"), rs.getString("department")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return list;
+    }
 }
 
 class LoanRepository {
-    // Yardımcı Metot
+    // kitap müsait mi
     public boolean isBookBorrowed(int bookId) {
         String sql = "SELECT count(*) FROM loans WHERE bookId = ? AND dateReturned IS NULL";
         try (Connection conn = Database.connect();
@@ -320,6 +320,19 @@ class LoanRepository {
     }
 
     // UPDATE
+    public void update(Loan loan) {
+        String sql = "UPDATE loans SET dateReturned = ? WHERE id = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, loan.getDateReturned());
+            pstmt.setInt(2, loan.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // kitap iade
     public void returnBook(int bookId, String dateReturned) {
         String sql = "UPDATE loans SET dateReturned = ? WHERE bookId = ? AND dateReturned IS NULL";
         try (Connection conn = Database.connect();
@@ -332,22 +345,6 @@ class LoanRepository {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    // GET ALL
-    public ArrayList<Loan> getAll() {
-        ArrayList<Loan> list = new ArrayList<>();
-        String sql = "SELECT * FROM loans";
-        try (Connection conn = Database.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                list.add(new Loan(rs.getInt("id"), rs.getInt("bookId"), rs.getInt("studentId"), rs.getString("dateBorrowed"), rs.getString("dateReturned")));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return list;
     }
 
     // DELETE
@@ -377,17 +374,34 @@ class LoanRepository {
         }
         return null;
     }
+
+    // GET ALL
+    public ArrayList<Loan> getAll() {
+        ArrayList<Loan> list = new ArrayList<>();
+        String sql = "SELECT * FROM loans";
+        try (Connection conn = Database.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new Loan(rs.getInt("id"), rs.getInt("bookId"), rs.getInt("studentId"), rs.getString("dateBorrowed"), rs.getString("dateReturned")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return list;
+    }
 }
 
 // ==========================================
-// 4. MAIN SINIFI
+// 4. MAIN SINIFI (Orkestra Şefi)
 // ==========================================
 
 public class Main {
     public static void main(String[] args) {
-        Database.createTables();
+        // uygulama başlarken tabloları oluştur
+        Database.createTables(); 
+        
         Scanner scanner = new Scanner(System.in);
-
         BookRepository bookRepo = new BookRepository();
         StudentRepository studentRepo = new StudentRepository();
         LoanRepository loanRepo = new LoanRepository();
@@ -395,22 +409,23 @@ public class Main {
         System.out.println("=== SMART LIBRARY SİSTEMİ ===");
 
         while (true) {
-            System.out.println("\n[1] Kitap Ekle");
+            System.out.println("\n--- MENÜ ---");
+            System.out.println("[1] Kitap Ekle");
             System.out.println("[2] Kitapları Listele");
             System.out.println("[3] Öğrenci Ekle");
             System.out.println("[4] Öğrencileri Listele");
-            System.out.println("[5] Ödünç Ver");
-            System.out.println("[6] Ödünçleri Gör");
-            System.out.println("[7] İade Al");
+            System.out.println("[5] Kitap Ödünç Ver");
+            System.out.println("[6] Ödünç Listesini Gör");
+            System.out.println("[7] Kitap İade Al");
             System.out.println("[0] Çıkış");
-            System.out.print("Seçim: ");
+            System.out.print("Seçiminiz: ");
 
             int choice;
             try {
                 choice = scanner.nextInt();
-                scanner.nextLine();
+                scanner.nextLine(); // buffer temizleme
             } catch (Exception e) {
-                System.out.println("Sadece sayı gir babuş.");
+                System.out.println("Lütfen sadece sayı giriniz.");
                 scanner.nextLine();
                 continue;
             }
@@ -423,6 +438,7 @@ public class Main {
                     bookRepo.add(t, a, y);
                     break;
                 case 2:
+                    System.out.println("\n-- Kitaplar --");
                     for (Book b : bookRepo.getAll()) System.out.println(b);
                     break;
                 case 3:
@@ -431,27 +447,29 @@ public class Main {
                     studentRepo.add(n, d);
                     break;
                 case 4:
+                    System.out.println("\n-- Öğrenciler --");
                     for (Student s : studentRepo.getAll()) System.out.println(s);
                     break;
                 case 5:
                     System.out.print("Kitap ID: "); int bid = scanner.nextInt();
                     System.out.print("Öğrenci ID: "); int sid = scanner.nextInt();
-                    System.out.print("Tarih: "); String date = scanner.next();
+                    System.out.print("Tarih (GG.AA.YYYY): "); String date = scanner.next();
                     loanRepo.lendBook(bid, sid, date);
                     break;
                 case 6:
+                    System.out.println("\n-- Ödünç İşlemleri --");
                     for (Loan l : loanRepo.getAll()) System.out.println(l);
                     break;
                 case 7:
-                    System.out.print("İade Kitap ID: "); int rbid = scanner.nextInt();
-                    System.out.print("İade Tarihi: "); String rdate = scanner.next();
+                    System.out.print("İade Edilen Kitap ID: "); int rbid = scanner.nextInt();
+                    System.out.print("İade Tarihi (GG.AA.YYYY): "); String rdate = scanner.next();
                     loanRepo.returnBook(rbid, rdate);
                     break;
                 case 0:
-                    System.out.println("Bye.");
+                    System.out.println("Çıkış yapılıyor...");
                     return;
                 default:
-                    System.out.println("Geçersiz işlem.");
+                    System.out.println("Geçersiz seçim, tekrar deneyin.");
             }
         }
     }
