@@ -262,7 +262,7 @@ class LoanRepository {
 
 public class Main {
     public static void main(String[] args) {
-        Database.createTables(); // Tabloları oluştur
+        Database.createTables();
         Scanner scanner = new Scanner(System.in);
 
         BookRepository bookRepo = new BookRepository();
