@@ -3,6 +3,13 @@
 Bu proje; **Java**, **SQLite** ve **JDBC** kullanılarak geliştirilmiş, nesne yönelimli programlama (OOP) prensiplerine dayalı bir masaüstü konsol uygulamasıdır.
 
 ---
+### Not
+
+Proje teknik dokümanında **Repository Sınıfları** için talep edilen tüm CRUD işlemleri (`add`, `update`, `delete`, `getById`, `getAll`) altyapı kodlarında eksiksiz olarak **yazılmıştır.**
+
+Ancak proje senaryosundaki **"Uygulama Menü Görevleri"** listesinde; kullanıcıya "Silme" veya "Güncelleme" yaptırılması (UI tarafında) açıkça istenmediği için, bu metodlar arka planda hazır tutulmuş fakat konsol menüsüne dahil edilmemiştir. İstenirse entegre edilebilir durumdadır.
+
+---
 
 ##  Kurulum ve Çalıştırma
 
