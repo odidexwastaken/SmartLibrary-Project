@@ -19,7 +19,7 @@ Projenin hatasız çalışabilmesi için **SQLite JDBC sürücüsünün** projey
 
 ---
 
-## 🛠 Proje Mimarisi ve Kod İşleyişi
+##  Proje Mimarisi ve Kod İşleyişi
 
 Proje, temiz kod (clean code) prensipleri gözetilerek **OOP** mantığına uygun parçalara ayrılmıştır. Kodlar tek bir dosyada toplanmak yerine, görevlerine göre sınıflara (Class) bölünmüştür.
 
