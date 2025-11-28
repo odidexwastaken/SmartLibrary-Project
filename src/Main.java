@@ -76,7 +76,7 @@ class Loan {
     @Override
     public String toString() {
         return "İşlem ID: " + id + " | Kitap ID: " + bookId + " | Öğrenci ID: " + studentId +
-                " | Alış: " + dateBorrowed + " | Teslim: " + (dateReturned == null ? "Teslim Edilmedi" : dateReturned);
+                " | Alış: " + dateBorrowed + " | Teslim: " + (dateReturned == null ? "Teslim Edilmedi" : "Teslim Edildi");
     }
 }
 
