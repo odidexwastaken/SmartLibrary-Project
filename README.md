@@ -2,7 +2,7 @@
 
 Bu proje; Java, SQLite ve JDBC kullanılarak geliştirilmiş masaüstü konsol uygulamasıdır.
 
-## 🚀 Kurulum ve Çalıştırma (Önemli)
+## Kurulum ve Çalıştırma
 
 Projenin çalışabilmesi için SQLite JDBC sürücüsünün projeye dahil edilmesi gerekmektedir. Gerekli `.jar` dosyası proje içerisinde **`lib`** klasöründe mevcuttur.
 
