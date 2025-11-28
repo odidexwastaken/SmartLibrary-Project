@@ -10,7 +10,7 @@ Projenin çalışması için `sqlite-jdbc` kütüphanesinin aktif edilmesi gerek
 
 1.  Projeyi IntelliJ IDEA ile açın.
 2.  Sol taraftaki proje dosyaları arasında **`lib`** klasörünü açın.
-3.  İçindeki **`sqlite-jdbc-xxxx.jar`** dosyasına **SAĞ TIKLAYIN**.
+3.  İçindeki **`sqlite-jdbc-3.51.0.0.jar`** dosyasına **SAĞ TIKLAYIN**.
 4.  Açılan menünün en alt kısımlarında **"Add as Library..."** seçeneğine tıklayın.
 5.  Gelen küçük pencerede **OK** butonuna basın.
 6.  Artık `Main.java` dosyasını çalıştırabilirsiniz.
