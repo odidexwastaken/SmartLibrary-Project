@@ -1,10 +1,10 @@
-# 📚 SmartLibrary - Kütüphane Yönetim Sistemi
+#  SmartLibrary - Kütüphane Yönetim Sistemi
 
 Bu proje; **Java**, **SQLite** ve **JDBC** kullanılarak geliştirilmiş, nesne yönelimli programlama (OOP) prensiplerine dayalı bir masaüstü konsol uygulamasıdır.
 
 ---
 
-## 🚀 Kurulum ve Çalıştırma (ÖNEMLİ)
+##  Kurulum ve Çalıştırma
 
 Projenin hatasız çalışabilmesi için **SQLite JDBC sürücüsünün** projeye dahil edilmesi gerekmektedir. Gerekli `.jar` dosyası proje içerisinde `lib` klasöründe mevcuttur.
 
@@ -15,7 +15,7 @@ Projenin hatasız çalışabilmesi için **SQLite JDBC sürücüsünün** projey
 4.  Proje klasörü içindeki **`lib/sqlite-jdbc-xxxx.jar`** dosyasını seçip ekleyin ve kaydedin.
 5.  `src` klasörü altındaki **`Main.java`** dosyasını çalıştırın.
 
-> **Not:** Veritabanı dosyası (`library.db`), program ilk çalıştırıldığında proje dizininde otomatik olarak oluşturulacaktır. Herhangi bir ekstra SQL kurulumuna gerek yoktur.
+ **Not:** Veritabanı dosyası (`library.db`), program ilk çalıştırıldığında proje dizininde otomatik olarak oluşturulacaktır. Herhangi bir ekstra SQL kurulumuna gerek yoktur.
 
 ---
 
