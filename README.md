@@ -6,14 +6,14 @@ Bu proje; **Java**, **SQLite** ve **JDBC** kullanılarak geliştirilmiş, nesne 
 
 ##  Kurulum ve Çalıştırma
 
-Projenin hatasız çalışabilmesi için **SQLite JDBC sürücüsünün** projeye dahil edilmesi gerekmektedir. Gerekli `.jar` dosyası proje içerisinde `lib` klasöründe mevcuttur.
+Projenin çalışması için `sqlite-jdbc` kütüphanesinin aktif edilmesi gerekir.
 
-### Adımlar:
-1.  Projeyi IntelliJ IDEA (veya Eclipse) ile açın.
-2.  **File > Project Structure > Libraries** menüsüne gidin.
-3.  `+` butonuna basıp **Java**'yı seçin.
-4.  Proje klasörü içindeki **`lib/sqlite-jdbc-xxxx.jar`** dosyasını seçip ekleyin ve kaydedin.
-5.  `src` klasörü altındaki **`Main.java`** dosyasını çalıştırın.
+1.  Projeyi IntelliJ IDEA ile açın.
+2.  Sol taraftaki proje dosyaları arasında **`lib`** klasörünü açın.
+3.  İçindeki **`sqlite-jdbc-xxxx.jar`** dosyasına **SAĞ TIKLAYIN**.
+4.  Açılan menünün en alt kısımlarında **"Add as Library..."** seçeneğine tıklayın.
+5.  Gelen küçük pencerede **OK** butonuna basın.
+6.  Artık `Main.java` dosyasını çalıştırabilirsiniz.
 
  **Not:** Veritabanı dosyası (`library.db`), program ilk çalıştırıldığında proje dizininde otomatik olarak oluşturulacaktır. Herhangi bir ekstra SQL kurulumuna gerek yoktur.
 
