@@ -121,7 +121,7 @@ class Database {
             stmt.execute(sqlBooks);
             stmt.execute(sqlStudents);
             stmt.execute(sqlLoans);
-            // System.out.println("Veritabanı hazır."); // Hocaya çok log basmayalım, sessiz çalışsın
+            System.out.println("Veritabanı hazır.");
 
         } catch (SQLException e) {
             System.out.println("Tablo oluşturma hatası: " + e.getMessage());
@@ -285,7 +285,7 @@ public class Main {
             int choice;
             try {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Buffer temizliği
+                scanner.nextLine();
             } catch (Exception e) {
                 System.out.println("Sadece sayı gir babuş.");
                 scanner.nextLine();
