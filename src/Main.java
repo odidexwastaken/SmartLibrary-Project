@@ -3,14 +3,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 // ==========================================
-// 1. ENTITY SINIFLARI (Varlıklar)
+// 1. ENTITY SINIFLARI (Sadeleştirildi)
 // ==========================================
 
 class Book {
-    private int id;
-    private String title;
-    private String author;
-    private int year;
+    private final int id;
+    private final String title;
+    private final String author;
+    private final int year;
 
     public Book(int id, String title, String author, int year) {
         this.id = id;
@@ -19,11 +19,6 @@ class Book {
         this.year = year;
     }
 
-    public int getId() { return id; }
-    public String getTitle() { return title; }
-    public String getAuthor() { return author; }
-    public int getYear() { return year; }
-
     @Override
     public String toString() {
         return id + " - " + title + " (" + author + ", " + year + ")";
@@ -31,19 +26,15 @@ class Book {
 }
 
 class Student {
-    private int id;
-    private String name;
-    private String department;
+    private final int id;
+    private final String name;
+    private final String department;
 
     public Student(int id, String name, String department) {
         this.id = id;
         this.name = name;
         this.department = department;
     }
-
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getDepartment() { return department; }
 
     @Override
     public String toString() {
@@ -52,11 +43,11 @@ class Student {
 }
 
 class Loan {
-    private int id;
-    private int bookId;
-    private int studentId;
-    private String dateBorrowed;
-    private String dateReturned;
+    private final int id;
+    private final int bookId;
+    private final int studentId;
+    private final String dateBorrowed;
+    private final String dateReturned;
 
     public Loan(int id, int bookId, int studentId, String dateBorrowed, String dateReturned) {
         this.id = id;
@@ -65,12 +56,6 @@ class Loan {
         this.dateBorrowed = dateBorrowed;
         this.dateReturned = dateReturned;
     }
-
-    public int getId() { return id; }
-    public int getBookId() { return bookId; }
-    public int getStudentId() { return studentId; }
-    public String getDateBorrowed() { return dateBorrowed; }
-    public String getDateReturned() { return dateReturned; }
 
     @Override
     public String toString() {
@@ -89,8 +74,9 @@ class Database {
     public static Connection connect() {
         Connection conn = null;
         try {
+            Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection(URL);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Bağlantı hatası: " + e.getMessage());
         }
         return conn;
@@ -115,16 +101,16 @@ class Database {
                 + "dateBorrowed TEXT, "
                 + "dateReturned TEXT);";
 
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
-
-            stmt.execute(sqlBooks);
-            stmt.execute(sqlStudents);
-            stmt.execute(sqlLoans);
-            System.out.println("Veritabanı hazır.");
-
+        try (Connection conn = connect()) {
+            if (conn != null) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.execute(sqlBooks);
+                    stmt.execute(sqlStudents);
+                    stmt.execute(sqlLoans);
+                }
+            }
         } catch (SQLException e) {
-            System.out.println("Tablo oluşturma hatası: " + e.getMessage());
+            System.out.println("Tablo hatası: " + e.getMessage());
         }
     }
 }
@@ -257,19 +243,19 @@ class LoanRepository {
 }
 
 // ==========================================
-// 4. MAIN SINIFI (Çalıştırıcı)
+// 4. MAIN SINIFI
 // ==========================================
 
 public class Main {
     public static void main(String[] args) {
-        Database.createTables(); // Tabloları oluştur
+        Database.createTables();
         Scanner scanner = new Scanner(System.in);
 
         BookRepository bookRepo = new BookRepository();
         StudentRepository studentRepo = new StudentRepository();
         LoanRepository loanRepo = new LoanRepository();
 
-        System.out.println("=== SMART LIBRARY SİSTEMİ BAŞLATILDI ===");
+        System.out.println("=== SMART LIBRARY SİSTEMİ ===");
 
         while (true) {
             System.out.println("\n[1] Kitap Ekle");
